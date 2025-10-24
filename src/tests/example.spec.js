@@ -91,7 +91,6 @@ test("lesson 3", async ({ page }) => {
 
 
 test("Lesson-3: BreakoutRoom", async ({ page }) => {
-
     await page.goto("/prihlaseni");
 
     const btnLogin = await page.getByRole('button', { name: 'Přihlásit' });
