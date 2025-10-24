@@ -1,25 +1,11 @@
 import { test, expect } from '@playwright/test';
- 
+
 test('homework', async ({ page }) => {
     // place for your homework code
     await page.goto('/');
 });
 
-
-test('registrace', async ({ page }) => {
-    // place for your homework code
-    await page.goto('/registrace');
-
-    await page.getByRole("textbox", { name: 'Jméno a příjmení' }).fill("TestName TestSurname");
-    await page.locator("#email").fill("email@test.com");
-    await page.locator("input#password").fill("test");
-    await page.locator("#password-confirm").fill("test")
-
-});
-
-
-test('Lesson_03: registrace', async ({ page }) => {
-    // place for your homework code
+test('Lesson_04.1: Registrace - uspesna registrace', async ({ page }) => {
     await page.goto('/registrace');
 
     const nameField = page.locator("input#name");
@@ -28,7 +14,54 @@ test('Lesson_03: registrace', async ({ page }) => {
     const passwordConfirmField = page.locator("#password-confirm");
     const registrationBtn = page.getByRole("button", { name: "Zaregistrovat" });
 
-    const invalidFeedback = ".invalid-feedback";
+    var unixDate = Date.now().toString();
+    var email = unixDate.concat("@test.com");
+
+    await nameField.fill("Test Name");
+    await emailField.fill(email);
+    await passwordField.fill("Test1234");
+    await passwordConfirmField.fill("Test1234");
+
+    await page.waitForTimeout(10);
+    await registrationBtn.click();
+
+    await page.getByRole('button', { name: 'Test Test1' })
+    await expect(page.getByRole('button', { name: 'Test Test1' })).toBeVisible;
+    await expect(page.getByRole('heading', { name: "Přihlášky" })).toBeVisible;
+});
+
+test('Lesson_04.2: Registrace - existujici mail', async ({ page }) => {
+    await page.goto('/registrace');
+
+    const nameField = page.locator("input#name");
+    const emailField = page.locator("#email");
+    const passwordField = page.locator("input#password");
+    const passwordConfirmField = page.locator("#password-confirm");
+    const registrationBtn = page.getByRole("button", { name: "Zaregistrovat" });
+
+    const invalidFeedback = ".toast-title"
+    const existingEmail = 'emilie.kratochvilova@test.com'
+
+    await nameField.fill("Test Name");
+    await emailField.fill(existingEmail);
+    await passwordField.fill("Test1234");
+    await passwordConfirmField.fill("Test1234");
+
+    await page.waitForTimeout(10);
+    await registrationBtn.click();
+    await expect(page.locator(invalidFeedback)).toBeVisible();
+});
+
+test('Lesson_04.3: Registrace - hesla se neshoduji ', async ({ page }) => {
+    await page.goto('/registrace');
+
+    const nameField = page.locator("input#name");
+    const emailField = page.locator("#email");
+    const passwordField = page.locator("input#password");
+    const passwordConfirmField = page.locator("#password-confirm");
+    const registrationBtn = page.getByRole("button", { name: "Zaregistrovat" });
+
+    const invalidFeedback = ".toast-title"
 
     await nameField.fill("TestName TestSurname");
     await emailField.fill("testTest@test.com");
@@ -38,13 +71,5 @@ test('Lesson_03: registrace', async ({ page }) => {
     await page.waitForTimeout(10);
 
     await registrationBtn.click();
-
-
-    // Possitive scenario
     await expect(page.locator(invalidFeedback)).toBeVisible();
-
-    //// Negative scenario
-    // await expect(page.locator(invalidFeedback)).toBeHidden();
-
 });
-
