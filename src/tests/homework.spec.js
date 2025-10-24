@@ -73,3 +73,5 @@ test('Lesson_04.3: Registrace - hesla se neshoduji ', async ({ page }) => {
     await registrationBtn.click();
     await expect(page.locator(invalidFeedback)).toBeVisible();
 });
+
+//
